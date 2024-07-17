@@ -86,6 +86,9 @@ npx grpc_tools_node_protoc `
 # todos
 
 -   [ ] add tests for controllers
+-   [ ] add logging middleware
+    -   [ ] grpc
+    -   [x] http
 -   [x] implement grpc_controller
 -   [x] change to dynamic proto generation because apparently proto-loader has native ts support so static generation is not needed [details here](https://github.com/grpc/grpc-node/tree/master/packages/proto-loader)
 -   [x] handle undefined values in grpc req/res, simply ignoring empty values is not enough

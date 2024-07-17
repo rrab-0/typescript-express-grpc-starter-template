@@ -1,13 +1,21 @@
 import { z } from "zod"
 import { consoleErrorRed } from "./util"
 
+export enum Env {
+	DEV = "dev",
+	PROD = "prod",
+	TEST = "test",
+}
+
 export interface AppConfig {
+	ENV: Env
 	DATABASE_URL: string
 	PORT: number
 	PORT_GRPC: number
 }
 
 const ZodAppConfig = z.object({
+	ENV: z.nativeEnum(Env),
 	DATABASE_URL: z.string(),
 	PORT: z.coerce.number(),
 	PORT_GRPC: z.coerce.number(),
@@ -24,6 +32,7 @@ const ZodDbMigrationConfig = z.object({
 export function setupConfig(): AppConfig {
 	try {
 		const validatedCfg = ZodAppConfig.parse({
+			ENV: process.env.ENV,
 			DATABASE_URL: process.env.DATABASE_URL,
 			PORT: process.env.PORT,
 			PORT_GRPC: process.env.PORT_GRPC,

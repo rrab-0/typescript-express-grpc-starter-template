@@ -2,7 +2,7 @@
     "engines": {
         "node": ">=20.6.0"
     },
-    "name": "express-todo-app",
+    "name": "starter-template-node-express-grpc-ts-drizzle-zod",
     "version": "1.0.0",
     "description": "",
     "main": "main.js",
@@ -22,8 +22,7 @@
         "@types/express": "^4.17.21",
         "@types/node": "^20.14.10",
         "drizzle-kit": "^0.23.0",
-        "grpc_tools_node_protoc_ts": "^5.3.3",
-        "nodemon": "^3.1.4",
+        "pino-pretty": "^11.2.1",
         "ts-node": "^10.9.2",
         "typescript": "^5.5.3"
     },
@@ -35,6 +34,7 @@
         "drizzle-orm": "^0.32.0",
         "express": "^4.19.2",
         "grpc-tools": "^1.12.4",
+        "pino-http": "^10.2.0",
         "postgres": "^3.4.4",
         "zod": "^3.23.8"
     }

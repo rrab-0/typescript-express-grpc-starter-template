@@ -1,6 +1,3 @@
-import express, { Request, Response } from "express"
-import cors from "cors"
-
 import { AppConfig, setupConfig } from "./config"
 import { setupDB } from "../db"
 import * as schema from "../db/schema"
@@ -9,18 +6,23 @@ import * as schema from "../db/schema"
 import * as grpc from "@grpc/grpc-js"
 import * as protoLoader from "@grpc/proto-loader"
 import { ReflectionService } from "@grpc/reflection"
+import { loggerInterceptor } from "./interceptors"
 
 // HTTP
+import express, { Request, Response } from "express"
+import cors from "cors"
 import { setupRoutes } from "./routes"
 import { TodoController, TodoService, TodoRepository } from "./todo"
 import { ProtoGrpcType } from "./todo/generated-grpc/todo"
 import { TodoControllerGRPC } from "./todo/grpc_controller"
 import { PostgresJsDatabase } from "drizzle-orm/postgres-js"
+import { logger } from "./middlewares"
 
 function startServerHTTP(cfg: AppConfig, db: PostgresJsDatabase<typeof schema>) {
 	const app = express()
 	app.use(express.json())
 	app.use(cors())
+	app.use(logger)
 
 	const todoCtrl = new TodoController(new TodoService(new TodoRepository(db)))
 	setupRoutes(app, todoCtrl)
@@ -40,7 +42,9 @@ function startServerGRPC(cfg: AppConfig, db: PostgresJsDatabase<typeof schema>) 
 	const pkgDef = protoLoader.loadSync("./protos/todo.proto")
 	const proto = grpc.loadPackageDefinition(pkgDef) as unknown as ProtoGrpcType
 
-	const server = new grpc.Server()
+	const server = new grpc.Server({
+		interceptors: [loggerInterceptor],
+	})
 	const reflection = new ReflectionService(pkgDef)
 	reflection.addToServer(server)
 
