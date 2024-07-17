@@ -1,0 +1,3 @@
+-- create database "express-todo-app";
+-- drop database "express-todo-app";
+-- select * from todos;
