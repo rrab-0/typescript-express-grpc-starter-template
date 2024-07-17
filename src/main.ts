@@ -2,8 +2,8 @@ import express, { Request, Response } from "express"
 import cors from "cors"
 
 import { AppConfig, setupConfig } from "./config"
-import { setupDB } from "./db"
-import * as schema from "./db/schema"
+import { setupDB } from "../db"
+import * as schema from "../db/schema"
 
 // gRPC
 import * as grpc from "@grpc/grpc-js"

@@ -1,3 +1,4 @@
+import { z } from "zod"
 import { consoleErrorRed } from "./util"
 
 export interface AppConfig {
@@ -6,53 +7,62 @@ export interface AppConfig {
 	PORT_GRPC: number
 }
 
+const ZodAppConfig = z.object({
+	DATABASE_URL: z.string(),
+	PORT: z.coerce.number(),
+	PORT_GRPC: z.coerce.number(),
+})
+
 interface DbMigrationConfig {
 	DATABASE_URL: string
 }
 
-// TODO: use zod for validation
+const ZodDbMigrationConfig = z.object({
+	DATABASE_URL: z.string(),
+})
+
 export function setupConfig(): AppConfig {
-	let databaseUrl = process.env.DATABASE_URL
-	let port: string | number | undefined = process.env.PORT
-	let portGRPC: string | number | undefined = process.env.PORT_GRPC
+	try {
+		const validatedCfg = ZodAppConfig.parse({
+			DATABASE_URL: process.env.DATABASE_URL,
+			PORT: process.env.PORT,
+			PORT_GRPC: process.env.PORT_GRPC,
+		})
 
-	if (!databaseUrl) {
-		consoleErrorRed("ERROR: DATABASE_URL environment variable is not set")
+		return validatedCfg
+	} catch (error) {
+		if (error instanceof z.ZodError) {
+			consoleErrorRed({
+				message: "ERROR: Failed to parse .env",
+				errors: error.errors.map((e) => {
+					return `${e.path}: ${e.message.toLowerCase()}`
+				}),
+			})
+		} else {
+			consoleErrorRed(error)
+		}
 		process.exit()
 	}
-
-	if (!port || !portGRPC) {
-		consoleErrorRed("ERROR: PORT or PORT_GRPC environment variable is not set")
-		process.exit()
-	}
-
-	port = parseInt(port)
-	portGRPC = parseInt(portGRPC)
-	if (isNaN(port) || isNaN(portGRPC)) {
-		consoleErrorRed("ERROR: PORT or PORT_GRPC environment variable is not a number")
-		process.exit()
-	}
-
-	const appConfig = {
-		DATABASE_URL: databaseUrl,
-		PORT: port,
-		PORT_GRPC: portGRPC,
-	}
-
-	return appConfig
 }
 
 export function setupDbMigrationConfig(): DbMigrationConfig {
-	let databaseUrl = process.env.DATABASE_URL
+	try {
+		const validatedCfg = ZodDbMigrationConfig.parse({
+			DATABASE_URL: process.env.DATABASE_URL,
+		})
 
-	if (!databaseUrl) {
-		consoleErrorRed("ERROR: DATABASE_URL environment variable is not set")
+		return validatedCfg
+	} catch (error) {
+		if (error instanceof z.ZodError) {
+			consoleErrorRed({
+				message: "ERROR: Failed to parse .env",
+				errors: error.errors.map((e) => {
+					return `${e.path}: ${e.message.toLowerCase()}`
+				}),
+			})
+		} else {
+			consoleErrorRed(error)
+		}
 		process.exit()
 	}
-
-	const dbMigrationConfig = {
-		DATABASE_URL: databaseUrl,
-	}
-
-	return dbMigrationConfig
 }

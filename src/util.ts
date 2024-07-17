@@ -45,9 +45,9 @@ export function handleGrpcError<T>(error: unknown, callback: sendUnaryData<T>) {
 			},
 			null
 		)
-	} else if (error instanceof PostgresError) {
+	} /* else if (error instanceof PostgresError) {
 		// handle postgres errors here if you want but im too lazy for that
-	} else if (isServerErrorResponse(error)) {
+	}  */ else if (isServerErrorResponse(error)) {
 		callback(
 			{
 				code: Status.INTERNAL,
@@ -115,8 +115,27 @@ BgMagenta = "\x1b[45m"
 BgCyan = "\x1b[46m"
 BgWhite = "\x1b[47m"
 BgGray = "\x1b[100m" */
+
+// NOTE: i honestly don't know if this would preserve all errors or not,
+// so when in doubt do not trust this and just use console.error normally
 export function consoleErrorRed(message: any) {
-	console.error("\x1b[41merror:\x1b[0m\n\x1b[31m%s\x1b[0m", message)
+	const formattedMessage = JSON.stringify(
+		message,
+		(_, value) => {
+			if (value instanceof Error) {
+				return {
+					name: value.name,
+					message: value.message,
+					stack: value.stack,
+					...(value as any),
+				}
+			}
+			return value
+		},
+		4
+	)
+
+	console.error("\x1b[41merror:\x1b[0m\n\x1b[31m%s\x1b[0m", formattedMessage)
 }
 
 export function consoleInfoYellow(message: any) {

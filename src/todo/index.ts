@@ -3,7 +3,7 @@ import { z } from "zod"
 import { TodoRepository } from "./repository"
 import { TodoController } from "./controller"
 import { TodoService } from "./service"
-import * as schema from "../db/schema"
+import * as schema from "../../db/schema"
 
 export { TodoRepository, TodoController, TodoService }
 

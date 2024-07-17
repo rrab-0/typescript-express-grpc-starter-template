@@ -1,5 +1,5 @@
 import { GetTodosRequest, Repository, Service, Todo } from "./index"
-import * as schema from "../db/schema"
+import * as schema from "../../db/schema"
 
 export class TodoService implements Service {
 	repository: Repository

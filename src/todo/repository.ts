@@ -1,7 +1,7 @@
 import { eq } from "drizzle-orm"
 import { PostgresJsDatabase } from "drizzle-orm/postgres-js"
 
-import * as schema from "../db/schema"
+import * as schema from "../../db/schema"
 import { Repository, Todo } from "./index"
 
 export class TodoRepository implements Repository {

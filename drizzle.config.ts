@@ -3,8 +3,8 @@ import { setupDbMigrationConfig } from "./src/config"
 
 const config = setupDbMigrationConfig()
 export default defineConfig({
-	schema: "./src/db/schema.ts",
-	out: "./drizzle",
+	schema: "./db/schema.ts",
+	out: "./db/drizzle",
 	dialect: "postgresql",
 	dbCredentials: {
 		url: config.DATABASE_URL,

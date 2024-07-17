@@ -1,7 +1,7 @@
 import { drizzle } from "drizzle-orm/postgres-js"
 import { migrate } from "drizzle-orm/postgres-js/migrator"
 import postgres from "postgres"
-import { setupDbMigrationConfig } from "../config"
+import { setupDbMigrationConfig } from "../src/config"
 
 export async function migrateDB() {
 	const config = setupDbMigrationConfig()
@@ -11,7 +11,7 @@ export async function migrateDB() {
 	})
 
 	migrate(drizzle(migrationClient), {
-		migrationsFolder: "../../drizzle",
+		migrationsFolder: "./drizzle",
 	})
 
 	await migrationClient.end()
