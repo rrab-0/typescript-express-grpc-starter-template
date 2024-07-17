@@ -1,6 +1,7 @@
 import { sendUnaryData, ServerErrorResponse } from "@grpc/grpc-js"
 import { Status } from "@grpc/grpc-js/build/src/constants"
 import { Response } from "express"
+import { PostgresError } from "postgres"
 import { z } from "zod"
 
 export function handleHttpError(error: unknown, res: Response) {
@@ -44,6 +45,8 @@ export function handleGrpcError<T>(error: unknown, callback: sendUnaryData<T>) {
 			},
 			null
 		)
+	} else if (error instanceof PostgresError) {
+		// handle postgres errors here if you want but im too lazy for that
 	} else if (isServerErrorResponse(error)) {
 		callback(
 			{
