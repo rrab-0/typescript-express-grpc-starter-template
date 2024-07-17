@@ -1,6 +1,6 @@
 import { consoleErrorRed } from "./util"
 
-interface AppConfig {
+export interface AppConfig {
 	DATABASE_URL: string
 	PORT: number
 	PORT_GRPC: number
